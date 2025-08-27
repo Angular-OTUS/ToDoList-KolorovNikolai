@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Todo } from '../../models/todo';
 
 @Component({
   selector: 'app-to-do-list',
@@ -9,23 +10,31 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './to-do-list.css'
 })
 export class ToDoList {
-  todos: string[] = [
-    'Buy a new gaming laptop',
-    'Complete previous task',
-    'Create some angular app',
+  todos: Todo[] = [
+    { id: 1, title: 'Buy a new gaming laptop' },
+    { id: 2, title: 'Complete previous task' },
+    { id: 3, title: 'Create some angular app' }
   ];
 
   taskName: string  = '';
 
-  add() {
-    var value = this.taskName.trim();
+  public add(): void {
+    const value = this.taskName.trim();
     if (!value) return;
 
-    this.todos.push(value);
+    const maxId = this.todos.length 
+      ? Math.max(...this.todos.map(t => t.id))
+      : 0;
+
+    this.todos.push({
+      id: maxId  + 1,
+      title: value
+    });
+    
     this.taskName = '';
   }
 
-  remove(index: number) {
-    this.todos.splice(index, 1);
+  public remove(id: number) : void {
+    this.todos = this.todos.filter(t => t.id !== id);    
   }  
 }

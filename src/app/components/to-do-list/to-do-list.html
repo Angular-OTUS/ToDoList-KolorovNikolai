@@ -3,10 +3,10 @@
 
   @if (todos.length > 0) {
     <ul class="list">
-      @for (t of todos; track i; let i = $index) {
+      @for (t of todos; track t.id) {
         <li class="item">
-          <span class="text">{{ t }}</span>
-          <button class="btn btn-delete" (click)="remove(i)">Delete</button>
+          <span class="text">{{ t.title }}</span>
+          <button class="btn btn-delete" (click)="remove(t.id)">Delete</button>
         </li>
       }
     </ul>
