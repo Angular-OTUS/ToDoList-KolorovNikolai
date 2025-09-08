@@ -1,0 +1,90 @@
+.card {
+  max-width: 400px;
+  margin: 20px auto;
+  padding: 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0px 5px 10px 0px rgba(146, 146, 146, 0.5);
+}
+
+.title {
+  margin: 0 0 12px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 12px;
+}
+
+.item {
+  display: flex;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  background: #eeeded;
+  height: 50px; 
+}
+
+.text {  
+  flex: 1;
+  padding: 0 8px;
+  display: flex;
+  align-items: center; 
+}
+
+.btn {
+  padding: 0 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.btn-delete {
+  background: #eee;
+  border: 1px solid #000;
+  color: #000;
+  height: 100%;
+  border-radius: 4px;
+  margin-right: 12px;  
+}
+
+.add-row {
+  display: flex;
+  gap: 8px;
+  height: 50px;
+}
+
+.add-row input {
+  flex: 1;  
+  padding: 0 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  height: 100%;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.btn-add {
+  background: #9e80fa;
+  color: #fff;
+  border-radius: 4px;
+  border: none;
+  padding: 0 12px;  
+  height: 100%;
+  cursor: pointer;
+  width: 100px;
+  font-size: 18px;  
+  display: flex;
+  align-items: center;
+}
+
+.empty {
+  color: #777;
+  font-size: 14px;
+  margin-top: 8px;
+}

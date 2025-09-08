@@ -1,0 +1,26 @@
+<div class="card">
+  <h1 class="title">Todo List</h1>
+
+  @if (todos.length > 0) {
+    <ul class="list">
+      @for (t of todos; track t.id) {
+        <li class="item">
+          <span class="text">{{ t.title }}</span>
+          <button class="btn btn-delete" (click)="remove(t.id)">Delete</button>
+        </li>
+      }
+    </ul>
+  } @else {
+    <p class="empty">No tasks</p>
+  }
+
+  <div class="add-row">
+    <input
+      type="text"
+      placeholder="Add your new todo"
+      [(ngModel)]="taskName"
+      (keyup.enter)="add()"
+    />
+    <button class="btn btn-add" (click)="add()">Add task</button>
+  </div>
+</div>
