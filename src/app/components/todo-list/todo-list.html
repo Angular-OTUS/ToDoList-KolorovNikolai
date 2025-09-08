@@ -1,0 +1,34 @@
+<div class="card">
+  <h1 class="title">Todo List</h1>
+
+  @if (todos().length > 0) {
+    <ul class="list">
+      @for (t of todos(); track t.id) {
+        <app-todo-list-item [todo] = "t" (delete)="remove($event)" />
+      }
+    </ul>
+  } @else {
+    <p class="empty">No tasks</p>
+  }
+
+  <div class="add-row">
+    <mat-form-field appearance="outline" class="task-input">
+      <input
+        matInput
+        placeholder="Add your new todo"
+        required
+        [(ngModel)]="taskText"
+        (keyup.enter)="add()"
+      />
+      <!-- @if (isTaskTextEmpty) {
+        <mat-error>Task's name is <strong>required</strong></mat-error>
+      }       -->
+    </mat-form-field>    
+    <button
+      class="button button-add"
+      (click)="add()"
+      [disabled]="isTaskTextEmpty"
+      [style.opacity]="isTaskTextEmpty ? 0.5 : 1"
+    >Add task</button>
+  </div>
+</div>

@@ -1,0 +1,19 @@
+.item {
+  display: flex;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  background: #eeeded;
+  height: 50px; 
+}
+
+.text {  
+  flex: 1;
+  padding: 0 8px;
+  display: flex;
+  align-items: center; 
+}
+
+.button-delete {
+  background: red;    
+  margin-right: 12px;
+}

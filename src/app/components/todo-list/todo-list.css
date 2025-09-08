@@ -1,0 +1,55 @@
+.card {
+  max-width: 400px;
+  margin: 20px auto;
+  padding: 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0px 5px 10px 0px rgba(146, 146, 146, 0.5);
+}
+
+.title {
+  margin: 0 0 12px;
+  font-size: 24px;
+  font-weight:400;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 12px;
+}
+
+.button-add {
+  background: green;  
+  width: 100px;
+  font-size: 18px;
+  height: 55px;
+}
+
+.task-input {
+  flex: 1;  
+}
+
+.add-row {  
+  display: flex;
+  gap: 8px;
+  height: 60px;
+}
+
+.add-row input {
+  flex: 1;  
+  padding: 0 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  height: 100%;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.empty {
+  color: #777;
+  font-size: 14px;
+  margin-top: 8px;
+}
