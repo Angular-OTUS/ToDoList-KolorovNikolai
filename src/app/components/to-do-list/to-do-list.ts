@@ -21,7 +21,7 @@ export class ToDoList {
   public add(): void {
     const value = this.taskName.trim();
     if (!value) return;
-
+    
     const maxId = this.todos.length 
       ? Math.max(...this.todos.map(t => t.id))
       : 0;
