@@ -1,4 +1,4 @@
-import { Component, input, output } from '@angular/core';
+import { Component, computed, input, output } from '@angular/core';
 import { ButtonType } from '../../models/button';
 import { CommonModule } from '@angular/common';
 
@@ -14,4 +14,8 @@ export class Button {
   disabled = input<boolean>(false);
 
   click = output<void>();
+
+  classes = computed(() => {   
+    return `button--${this.type()}`
+  });
 }
