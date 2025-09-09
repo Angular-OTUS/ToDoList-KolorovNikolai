@@ -1,20 +1,20 @@
 import { Component, input, output } from '@angular/core';
 import { Todo } from '../../models/todo';
+import { Button } from '../button/button';
 
 @Component({
   selector: 'app-todo-list-item',
-  imports: [],
+  imports: [Button],
   templateUrl: './todo-list-item.html',
-  styleUrl: './todo-list-item.css'
+  styleUrl: './todo-list-item.css',
 })
 export class TodoListItem {
-  todo = input<Todo>();  
+  todo = input<Todo>();
   delete = output<number>();
 
   onDelete() {
-    const t = this.todo();
-    if (!t) return;  
+    if (!this.todo()) return;
 
-    this.delete.emit(t.id);
+    this.delete.emit(this.todo()!.id);
   }
 }
