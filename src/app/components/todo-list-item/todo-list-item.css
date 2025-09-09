@@ -12,8 +12,3 @@
   display: flex;
   align-items: center; 
 }
-
-.button-delete {
-  background: red;    
-  margin-right: 12px;
-}

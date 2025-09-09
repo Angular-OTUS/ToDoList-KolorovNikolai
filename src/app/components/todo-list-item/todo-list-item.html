@@ -1,4 +1,4 @@
 <li class="item">
-    <span class="text">{{ todo()?.text }}</span>
-    <button class="button button-delete" (click)="onDelete()">Delete</button>
+    <span class="text">{{ todo()?.text }}</span>    
+    <app-button [title]="'Delete'" [type] = "'delete'" (click)="onDelete()" />
 </li>
