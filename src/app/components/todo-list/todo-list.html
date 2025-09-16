@@ -1,37 +1,64 @@
 <div class="card">
-  <h1 class="title">Todo List</h1>
-
+  <h1 class="card__title">Todo List</h1>
   @if (isLoading()) {
-    <div class="loading-container">
-      <mat-spinner diameter="40"></mat-spinner>
+    <div class="card__loading">
+      <mat-spinner diameter="30"></mat-spinner>
       <span>Loading...</span>
     </div>
   } @else {
-    @if (todos().length > 0) {
-      <ul class="list">
-        @for (t of todos(); track t.id) {
-          <app-todo-list-item [todo] = "t" (delete)="remove($event)" />
-        }
-      </ul>
-    } @else {
-      <p class="empty">No tasks</p>
-    }
-  }
+    <div class="todo">
+      <!-- Левая колонка: список + форма -->
+      <div class="todo__left">
+        <ul class="todo__list">
+          @if (todos().length > 0) {
+            @for (t of todos(); track t.id) {
+              <app-todo-list-item
+                [todo]="t"
+                (click)="selectTodo(t)"
+                (delete)="onRemove($event)"
+                [class.selected]="selectedTodo()?.id === t.id" />
+            }
+          } @else {
+            <li class="todo__empty">No tasks</li>
+          }
+        </ul>
 
-  <div class="add-row">
-    <mat-form-field appearance="outline" class="task-input">
-      <input
-        matInput
-        placeholder="Add your new todo"
-        required
-        [(ngModel)]="taskText"
-        (keyup.enter)="add()"
-      />
-    </mat-form-field>    
-    <app-button
-      [title]="'Add'"
-      [type] = "'add'"
-      (click)="add()"
-      [disabled]="isTaskTextEmpty" />
-  </div>
+        <!-- форма под списком -->
+        <form [formGroup]="todoForm" (ngSubmit)="onAdd()" class="add">
+          <div class="add__field">
+            <input type="text" placeholder="Title" formControlName="title" #titleInput />
+
+            @if (!todoForm.get('title')?.value && todoForm.get('title')?.touched) {
+              <div class="add__error">Title is required</div>
+            }
+          </div>
+
+          <div class="add__field">
+            <textarea placeholder="Description" formControlName="description"></textarea>
+          </div>
+
+          <div class="add__actions">
+            <app-button
+              [title]="'Add'"
+              [type]="'add'"
+              [disabled]="isTaskEmpty"
+              (click)="onAdd()"
+              appTooltip="Добавить задачу"
+            />
+          </div>
+        </form>
+      </div>
+
+      <!-- правая колонка -->
+      @if (selectedTodo()) {
+        <div class="todo__description">
+          <p class="todo__description-text">
+            {{ selectedTodo()!.description }}
+          </p>
+        </div>
+      } @else {
+        <div class="todo__placeholder">Choose task</div>
+      }
+    </div>
+  }
 </div>

@@ -1,51 +1,62 @@
 import { CommonModule } from '@angular/common';
-import { Component, model, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, inject, signal } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Todo } from '../../models/todo';
 import { TodoListItem } from '../todo-list-item/todo-list-item';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Button } from '../button/button';
+import { TodoService } from '../../services/todo.service';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { TooltipDirective } from '../../directives/tooltip';
 
 @Component({
   selector: 'app-todo-list',
-  imports: [CommonModule, FormsModule, TodoListItem, MatInputModule, MatProgressSpinnerModule, Button],
+  imports: [CommonModule, FormsModule, TodoListItem, MatInputModule, MatProgressSpinnerModule,
+            Button, ReactiveFormsModule, MatFormFieldModule, TooltipDirective],
   templateUrl: './todo-list.html',
   styleUrl: './todo-list.css',
 })
 export class TodoList {
-  taskText = model('');
-  todos = signal<Todo[]>([
-    { id: 1, text: 'Buy a new gaming laptop' },
-    { id: 2, text: 'Complete previous task' },
-    { id: 3, text: 'Create some angular app' },
-  ]);
-
-  get isTaskTextEmpty(): boolean {    
-    return !this.taskText().trim();
-  }
-
+  private readonly fb = inject(FormBuilder);
+  private readonly todoService = inject(TodoService); 
+  
+  public todos = this.todoService.todos;
   public isLoading = signal(true);
+  public selectedTodo = signal<Todo | null>(null);
 
-  ngOnInit() {    
+  public todoForm: FormGroup = this.fb.group({
+      title: ['', Validators.required],
+      description: [''],
+  });
+
+  public get isTaskEmpty(): boolean {
+    const title = this.todoForm.get('title')?.value;
+    return !(title?.trim());
+  }  
+
+  ngOnInit() {
     setTimeout(() => {
       this.isLoading.set(false);
     }, 500); 
+  }
+
+  public selectTodo(todo: Todo): void {
+    this.selectedTodo.set(todo);
+  }
+
+  public onAdd(): void {
+    if (this.todoForm.invalid) return;
+
+    this.todoService.add(
+      this.todoForm.get('title')?.value.trim(),
+      this.todoForm.get('description')?.value.trim(),
+    );
+
+    this.todoForm.reset({ title: '', description: '' });
+  }
+
+  public onRemove(id: number): void {
+    this.todoService.remove(id);
   }  
-
-  public add(): void {
-    const newTaskText = this.taskText().trim();
-    if (!newTaskText) return;
-
-    const maxId = this.todos().length 
-      ? Math.max(...this.todos().map(t => t.id))
-      : 0;
-
-    this.todos.set([...this.todos(), { id: maxId + 1, text: newTaskText }]);
-    this.taskText.set('');
-  }
-
-  public remove(id: number) : void {
-    this.todos.set(this.todos().filter(t => t.id !== id));
-  }
 }
