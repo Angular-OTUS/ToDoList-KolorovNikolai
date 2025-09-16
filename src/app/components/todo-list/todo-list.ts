@@ -30,9 +30,8 @@ export class TodoList {
       description: [''],
   });
 
-  public get isTaskEmpty(): boolean {
-    const title = this.todoForm.get('title')?.value;
-    return !(title?.trim());
+  public get isTaskEmpty(): boolean {    
+    return !(this.todoForm.get('title')?.value?.trim());
   }  
 
   ngOnInit() {

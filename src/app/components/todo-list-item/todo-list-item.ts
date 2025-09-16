@@ -14,8 +14,8 @@ export class TodoListItem {
   public delete = output<number>();
 
   public onDelete(): void {
-    if (!this.todo()) return;
-
-    this.delete.emit(this.todo()!.id);
+    if (this.todo()) {
+      this.delete.emit(this.todo()!.id);
+    }
   }
 }
