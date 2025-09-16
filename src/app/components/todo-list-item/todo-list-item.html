@@ -1,4 +1,8 @@
 <li class="item">
-    <span class="text">{{ todo()?.text }}</span>    
-    <app-button [title]="'Delete'" [type] = "'delete'" (click)="onDelete()" />
+    <span class="item__text">{{ todo()?.title }}</span>    
+    <app-button
+        [title]="'Delete'"
+        [type] = "'delete'"
+        (click)="onDelete()"
+        appTooltip="Удалить задачу"/>    
 </li>

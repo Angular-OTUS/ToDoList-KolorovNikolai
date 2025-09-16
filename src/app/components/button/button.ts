@@ -9,13 +9,13 @@ import { CommonModule } from '@angular/common';
   styleUrl: './button.css',
 })
 export class Button {
-  title = input<string>('');
-  type = input<ButtonType>('add');
-  disabled = input<boolean>(false);
+  public title = input<string>('');
+  public type = input<ButtonType>('add');
+  public disabled = input<boolean>(false);
 
-  click = output<void>();
+  public click = output<void>();
 
-  classes = computed(() => {   
-    return `button--${this.type()}`
+  public classes = computed(() => {   
+    return `button__${this.type()}`
   });
 }

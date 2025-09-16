@@ -1,5 +1,5 @@
 .card {
-  max-width: 400px;
+  max-width: 700px;
   margin: 20px auto;
   padding: 16px;
   border: 1px solid #ddd;
@@ -8,51 +8,96 @@
   box-shadow: 0px 5px 10px 0px rgba(146, 146, 146, 0.5);
 }
 
-.title {
+.card__title {
   margin: 0 0 12px;
   font-size: 24px;
-  font-weight:400;
+  font-weight: 400;
   text-align: center;
 }
 
-.list {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 12px;
-}
-
-.task-input {
-  flex: 1;  
-}
-
-.add-row {  
-  display: flex;
-  gap: 8px;
-  height: 60px;
-}
-
-.add-row input {
-  flex: 1;  
-  padding: 0 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  height: 100%;
-  font-size: 16px;
-  display: flex;
-  align-items: center;
-}
-
-.empty {
-  color: #777;
-  font-size: 14px;
-  margin-top: 8px;
-}
-
-.loading-container {
+.card__loading {
   display: flex;
   flex-direction: column;  
   justify-content: center;
   align-items: center;
-  min-height: 150px; 
   gap: 12px;
+}
+
+.todo {
+  display: flex;
+  gap: 20px; 
+}
+
+/* Левая колонка: список и форма */
+.todo__left {
+  display: flex;
+  flex-direction: column;
+  width: 65%;
+  gap: 10px;
+}
+
+.todo__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Правая колонка: описание */
+.todo__description,
+.todo__placeholder {
+  flex: 1; 
+  padding: 10px;
+  border-left: 1px solid #ddd;
+}
+
+.todo__placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #aaa;
+  font-style: italic;
+}
+
+.todo__empty {
+  color: #777;
+  font-size: 14px;
+  margin-top: 8px;
+  text-align: center;
+}
+
+/* Форма под списком */
+.add {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.add__field {
+  display: flex;
+  flex-direction: column;
+}
+
+.add__field input,
+.add__field textarea {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font: inherit;
+}
+
+.add__field textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.add__error {
+  color: #d93025;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.add__actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 8px;
 }

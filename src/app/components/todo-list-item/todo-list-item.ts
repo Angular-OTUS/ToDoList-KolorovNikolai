@@ -1,20 +1,21 @@
 import { Component, input, output } from '@angular/core';
 import { Todo } from '../../models/todo';
 import { Button } from '../button/button';
+import { TooltipDirective } from '../../directives/tooltip';
 
 @Component({
   selector: 'app-todo-list-item',
-  imports: [Button],
+  imports: [Button, TooltipDirective],
   templateUrl: './todo-list-item.html',
   styleUrl: './todo-list-item.css',
 })
 export class TodoListItem {
-  todo = input<Todo>();
-  delete = output<number>();
+  public todo = input<Todo>();
+  public delete = output<number>();
 
-  onDelete() {
-    if (!this.todo()) return;
-
-    this.delete.emit(this.todo()!.id);
+  public onDelete(): void {
+    if (this.todo()) {
+      this.delete.emit(this.todo()!.id);
+    }
   }
 }
