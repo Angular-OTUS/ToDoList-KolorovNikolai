@@ -1,0 +1,17 @@
+:root {
+  --add-base: rgb(1, 117, 1);
+  --add-light: rgb(57, 163, 57);
+  --add-dark: rgb(0, 90, 0);
+
+  --delete-base: rgb(168, 3, 3);
+  --delete-light: rgb(210, 50, 50);
+  --delete-dark: rgb(120, 0, 0);
+
+  --save-base: #0375d3;
+  --save-light: #4da6f0;
+  --save-dark: #0054a0;
+
+  --cancel-base: #4e5050;
+  --cancel-light: #7a7c7c;
+  --cancel-dark: #2c2d2d;
+}

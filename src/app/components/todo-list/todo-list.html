@@ -14,8 +14,12 @@
             @for (t of todos(); track t.id) {
               <app-todo-list-item
                 [todo]="t"
+                [editingId]="editingId() "
+                (edit)="startEdit(t.id)"
+                (cancel)="cancelEdit()"
                 (click)="selectTodo(t)"
                 (delete)="onRemove($event)"
+                (save)="onUpdate($event)"
                 [class.selected]="selectedTodo()?.id === t.id" />
             }
           } @else {
@@ -41,8 +45,7 @@
             <app-button
               [title]="'Add'"
               [type]="'add'"
-              [disabled]="isTaskEmpty"
-              (click)="onAdd()"
+              [disabled]="isTaskEmpty"              
               appTooltip="Добавить задачу"
             />
           </div>

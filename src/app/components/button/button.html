@@ -2,6 +2,6 @@
   class="button"
   [ngClass]="classes()"
   [disabled]="disabled()"
-  (click)="click.emit()">
+  (click)="onClick($event)">
   {{ title() }}
 </button>

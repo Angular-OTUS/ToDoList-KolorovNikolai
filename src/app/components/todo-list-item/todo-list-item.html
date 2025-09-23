@@ -1,8 +1,36 @@
-<li class="item">
-    <span class="item__text">{{ todo()?.title }}</span>    
+<li class="item"
+	(dblclick)="onEdit()"
+	[class.selected]="isEditingTodo()">
+  
+  @if (!isEditingTodo()) {
+    <span class="item__text">{{ todo()?.title }}</span>
+
     <app-button
-        [title]="'Delete'"
-        [type] = "'delete'"
-        (click)="onDelete()"
-        appTooltip="Удалить задачу"/>    
+      title="Delete"
+      type="delete"
+      (click)="onDelete($event)"
+      [disabled]="isDeleteLocked()"
+      appTooltip="Удалить задачу">
+    </app-button>    
+  } @else {    
+    <input
+      class="item__edit-input"
+      [value]="editingTitle()"
+      (input)="editingTitle.set($event.target.value)" />
+
+    <app-button
+      title="Save"
+      type="save"
+      (click)="onSave($event)"
+      appTooltip="Сохранить изменения"
+      [disabled]="!editingTitle().trim()">
+    </app-button>
+
+    <app-button
+      title="Cancel"
+      type="cancel"
+      (click)="onCancel()"
+      appTooltip="Отменить изменения">
+    </app-button>
+  } 
 </li>

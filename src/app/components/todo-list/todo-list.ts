@@ -9,6 +9,7 @@ import { Button } from '../button/button';
 import { TodoService } from '../../services/todo.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { TooltipDirective } from '../../directives/tooltip';
+import { ToastService } from '../../shared/toast.service';
 
 @Component({
   selector: 'app-todo-list',
@@ -19,11 +20,14 @@ import { TooltipDirective } from '../../directives/tooltip';
 })
 export class TodoList {
   private readonly fb = inject(FormBuilder);
-  private readonly todoService = inject(TodoService); 
+  private readonly todoService = inject(TodoService);
+  private readonly toastService = inject(ToastService);
   
   public todos = this.todoService.todos;
   public isLoading = signal(true);
+
   public selectedTodo = signal<Todo | null>(null);
+  public editingId  = signal<number | null>(null);
 
   public todoForm: FormGroup = this.fb.group({
       title: ['', Validators.required],
@@ -35,27 +39,60 @@ export class TodoList {
   }  
 
   ngOnInit() {
-    setTimeout(() => {
-      this.isLoading.set(false);
-    }, 500); 
+    this.todoService.loadTodos();
+    setTimeout(() => this.isLoading.set(false), 500);
   }
 
   public selectTodo(todo: Todo): void {
-    this.selectedTodo.set(todo);
+    if (this.editingId() === null) this.selectedTodo.set(todo);
   }
 
+  public startEdit(id: number): void {    
+    this.editingId.set(id);
+  }
+
+  public cancelEdit(): void {
+    this.editingId.set(null);
+  }
+  
   public onAdd(): void {
-    if (this.todoForm.invalid) return;
+    if (!this.todoForm.valid) return;
 
-    this.todoService.add(
-      this.todoForm.get('title')?.value.trim(),
-      this.todoForm.get('description')?.value.trim(),
-    );
+    const newTodo: Omit<Todo, 'id'> = {
+      title: this.todoForm.get('title')?.value.trim(),
+      description: this.todoForm.get('description')?.value.trim(),
+      completed: false,
+    };
 
-    this.todoForm.reset({ title: '', description: '' });
+    this.todoService.add(newTodo).subscribe({
+      next: (added) => {
+        this.todoForm.reset({ title: '', description: '' });
+        this.selectedTodo.set(added); // выделяем только что добавленную задачу
+        this.toastService.showToast('Задача добавлена', 'add');
+      },
+      error: (err) => console.error('Ошибка добавления', err),
+    });
   }
+  
+  public onUpdate(updated: Todo): void {
+    this.todoService.update(updated).subscribe({
+      next: (updated) => {
+        this.selectedTodo.set(updated);
+        this.cancelEdit();
+        this.toastService.showToast('Задача обновлена', 'save');
+      },
+      error: (err) => console.error('Ошибка обновления', err),
+    });
+  }  
 
   public onRemove(id: number): void {
-    this.todoService.remove(id);
+    this.todoService.remove(id).subscribe({
+      next: () => {
+        if (this.editingId() === id) this.cancelEdit();
+        if (this.selectedTodo()?.id === id) this.selectedTodo.set(null);        
+        this.toastService.showToast('Задача удалена', 'delete');
+      },
+      error: (err) => console.error('Ошибка удаления', err),
+    });
   }  
 }
