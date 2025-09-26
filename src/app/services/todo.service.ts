@@ -1,40 +1,47 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { Todo } from '../models/todo';
+import { HttpClient } from '@angular/common/http';
+import { Observable, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
-  public todos = signal<Todo[]>([
-    {
-      id: 1,
-      title: 'Buy a new gaming laptop',
-      description: 'Nemo enim ipsam voluptatem, quis nostrum exercitationem ullam corporis suscipit laboriosam, sed do eiusmod tempor incididunt ut labore et dolore',
-      completed: false,
-    },
-    {
-      id: 2,
-      title: 'Complete previous task',
-      description: 'Excepteur sint occaecat cupidatat non proident, quia voluptas sit, aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos',
-      completed: false,
-    },
-    {
-      id: 3,
-      title: 'Create some angular app',
-      description: 'Lorem ipsum dolor sit amet, nam libero tempore, cum soluta nobis est eligendi optio, cumque nihil impedit, quo minus id',
-      completed: false,
-    },
-  ]);
+  private readonly http = inject(HttpClient);
+  private apiUrl = 'https://68d14427e6c0cbeb39a42790.mockapi.io/api/todos';  
 
-  public add(title: string, description: string): void {
-    const maxId = this.todos().length
-      ? Math.max(...this.todos().map(t => t.id))
-      : 0;
+  public todos = signal<Todo[]>([]);  
 
-    this.todos.set([...this.todos(), { id: maxId + 1, title, description, completed: false }]);
+  // Загрузить список задач
+  public loadTodos(): void {
+    this.http.get<Todo[]>(this.apiUrl).subscribe({
+      next: (data) => this.todos.set(data),
+      error: (err) => console.error('Ошибка загрузки todos', err),
+    });
   }
 
-  public remove(id: number) : void {
-    this.todos.set(this.todos().filter(t => t.id !== id));
-  }    
+  // Добавление задачи
+  public add(todo: Omit<Todo, 'id'>): Observable<Todo> {
+    return this.http.post<Todo>(this.apiUrl, todo).pipe(
+      tap(newTodo => this.todos.update(list => [...list, newTodo])),
+    );
+  }
+
+  // Обновление задачи
+  public update(todo: Todo): Observable<Todo> {
+    return this.http.put<Todo>(`${this.apiUrl}/${todo.id}`, todo).pipe(
+      tap(updated => {
+        this.todos.update(list => list.map(t => t.id === updated.id ? updated : t));
+      }),
+    );
+  }
+
+  // Удаление задачи
+  public remove(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`).pipe(
+      tap(() => {
+        this.todos.update(list => list.filter(t => t.id !== id));
+      }),
+    );
+  }
 }

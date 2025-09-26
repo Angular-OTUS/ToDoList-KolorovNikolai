@@ -13,9 +13,13 @@ export class Button {
   public type = input<ButtonType>('add');
   public disabled = input<boolean>(false);
 
-  public click = output<void>();
+  public click = output<MouseEvent>();
 
   public classes = computed(() => {   
     return `button__${this.type()}`
   });
+
+  public onClick(event: MouseEvent) {
+    this.click.emit(event);
+  }  
 }

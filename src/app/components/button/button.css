@@ -7,19 +7,28 @@
   justify-content: center;
   align-items: center;
   border: none;
-  height: 100%;  
+  height: 50px;
 }
 
 .button__add {
-  background: rgb(1, 117, 1);  
+  background: var(--add-base);
   width: 100px;
-  font-size: 18px;
-  height: 55px;
+  font-size: 18px;  
 }
 
 .button__delete {
-  background: rgb(168, 3, 3);
-  margin-right: 12px;
+  background: var(--delete-base);
+  width: 80px;
+}
+
+.button__save {
+  background: var(--save-base);
+  width: 80px;
+}
+
+.button__cancel {
+  background: var(--cancel-base);
+  width: 80px;
 }
 
 .button:disabled {

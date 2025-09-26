@@ -1,0 +1,37 @@
+.toasts-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 1000;
+}
+
+.toast {
+  color: #fff;
+  padding: 12px 16px;
+  border-radius: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-width: 120px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.25);
+  font-weight: 500;
+  font-size: 14px;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+/* Цвета по типу тоста */
+.toast.add { background-color: var(--add-base) }
+.toast.delete { background-color: var(--delete-base) }
+.toast.save { background-color: var(--save-base) }
+
+.close-btn {
+  background: transparent;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  margin-left: 8px;
+}

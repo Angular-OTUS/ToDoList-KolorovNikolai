@@ -1,18 +1,31 @@
 .item {
   display: flex;
+  align-items: center;
   border-radius: 4px;
   margin-bottom: 10px;
   background: #eeeded;
-  height: 50px; 
+  min-height: 50px;
+  padding: 0 6px;
+  gap: 8px;
 }
 
 .item__text {
   flex: 1;
-  padding: 0 8px;
+  padding: 0px 8px;
   display: flex;
   align-items: center;
 }
 
+.item__edit-input {
+  flex: 1;
+  padding: 10px 8px;
+  font: inherit;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+}
+
+/* выбранная строка */
 :host(.selected) .item {
   background: #d0ebff;
 }
