@@ -1,17 +1,29 @@
 <div class="card">
   <h1 class="card__title">Todo List</h1>
   @if (isLoading()) {
-    <div class="card__loading">
-      <mat-spinner diameter="30"></mat-spinner>
-      <span>Loading...</span>
-    </div>
+    <app-loading-spinner [size]="30" text="Loading..." />
   } @else {
     <div class="todo">
       <!-- Левая колонка: список + форма -->
       <div class="todo__left">
+
+        <!-- Фильтр по статусу -->
+        <div class="todo__filters">
+          <mat-form-field appearance="outline"  class="status-select">
+            <mat-select
+              [value]="statusFilter()"
+              (selectionChange)="statusFilter.set($event.value)" style="font-size: 14px;">
+              <mat-option style="font-size: 14px;" [value]="''">All</mat-option>
+              <mat-option style="font-size: 14px;" value="InProgress">In Progress</mat-option>
+              <mat-option style="font-size: 14px;" value="Completed">Completed</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <!-- Список задач -->
         <ul class="todo__list">
-          @if (todos().length > 0) {
-            @for (t of todos(); track t.id) {
+          @if (filteredTodos().length > 0) {
+            @for (t of filteredTodos(); track t.id) {
               <app-todo-list-item
                 [todo]="t"
                 [editingId]="editingId() "
@@ -27,29 +39,8 @@
           }
         </ul>
 
-        <!-- форма под списком -->
-        <form [formGroup]="todoForm" (ngSubmit)="onAdd()" class="add">
-          <div class="add__field">
-            <input type="text" placeholder="Title" formControlName="title" #titleInput />
+        <app-todo-create-item (add)="onAdd($event)"></app-todo-create-item>
 
-            @if (!todoForm.get('title')?.value && todoForm.get('title')?.touched) {
-              <div class="add__error">Title is required</div>
-            }
-          </div>
-
-          <div class="add__field">
-            <textarea placeholder="Description" formControlName="description"></textarea>
-          </div>
-
-          <div class="add__actions">
-            <app-button
-              [title]="'Add'"
-              [type]="'add'"
-              [disabled]="isTaskEmpty"              
-              appTooltip="Добавить задачу"
-            />
-          </div>
-        </form>
       </div>
 
       <!-- правая колонка -->

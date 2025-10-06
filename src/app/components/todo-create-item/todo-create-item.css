@@ -1,0 +1,35 @@
+.add {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.add__field {
+  display: flex;
+  flex-direction: column;
+}
+
+.add__field input,
+.add__field textarea {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font: inherit;
+}
+
+.add__field textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.add__error {
+  color: #d93025;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.add__actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 8px;
+}

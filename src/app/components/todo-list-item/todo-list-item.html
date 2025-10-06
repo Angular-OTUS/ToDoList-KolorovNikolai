@@ -3,14 +3,22 @@
 	[class.selected]="isEditingTodo()">
   
   @if (!isEditingTodo()) {
+    <div class="item__left" (click)="toggleStatus($event)">
+      <i class="bi" [ngClass]="{
+        'bi-check-circle-fill': todo()?.status === 'Completed',
+        'bi-circle': todo()?.status === 'InProgress'
+      }"></i>
+    </div>
+        
     <span class="item__text">{{ todo()?.title }}</span>
 
-    <app-button
-      title="Delete"
+    <app-button      
       type="delete"
       (click)="onDelete($event)"
       [disabled]="isDeleteLocked()"
       appTooltip="Удалить задачу">
+      <i class="bi bi-trash"></i>
+      Delete
     </app-button>    
   } @else {    
     <input
@@ -18,19 +26,21 @@
       [value]="editingTitle()"
       (input)="editingTitle.set($event.target.value)" />
 
-    <app-button
-      title="Save"
+    <app-button      
       type="save"
       (click)="onSave($event)"
       appTooltip="Сохранить изменения"
       [disabled]="!editingTitle().trim()">
+      <i class="bi bi-check-lg"></i>
+      Save
     </app-button>
 
-    <app-button
-      title="Cancel"
+    <app-button      
       type="cancel"
       (click)="onCancel()"
       appTooltip="Отменить изменения">
+      <i class="bi bi-x-lg"></i>
+      Cancel
     </app-button>
   } 
 </li>

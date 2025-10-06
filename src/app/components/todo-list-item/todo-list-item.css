@@ -25,7 +25,25 @@
   outline: none;
 }
 
+.item__left {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  cursor: pointer;
+}
+
 /* выбранная строка */
 :host(.selected) .item {
   background: #d0ebff;
+}
+
+.bi-check-circle-fill {
+  color: var(--save-base);
+  font-size: 20px;
+}
+
+.bi-circle {
+  color: #aaa;
+  font-size: 20px;
 }

@@ -15,14 +15,6 @@
   text-align: center;
 }
 
-.card__loading {
-  display: flex;
-  flex-direction: column;  
-  justify-content: center;
-  align-items: center;
-  gap: 12px;
-}
-
 .todo {
   display: flex;
   gap: 20px; 
@@ -34,6 +26,19 @@
   flex-direction: column;
   width: 65%;
   gap: 10px;
+}
+
+.todo__filters {
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px; 
+}
+
+.status-select {
+  --mat-form-field-container-height: 2rem;
+  --mat-form-field-container-vertical-padding: 0.3rem;  
+  width: 140px;  
 }
 
 .todo__list {
@@ -63,41 +68,4 @@
   font-size: 14px;
   margin-top: 8px;
   text-align: center;
-}
-
-/* Форма под списком */
-.add {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.add__field {
-  display: flex;
-  flex-direction: column;
-}
-
-.add__field input,
-.add__field textarea {
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font: inherit;
-}
-
-.add__field textarea {
-  min-height: 100px;
-  resize: vertical;
-}
-
-.add__error {
-  color: #d93025;
-  font-size: 12px;
-  margin-top: 4px;
-}
-
-.add__actions {
-  display: flex;
-  justify-content: flex-end;
-  padding-right: 8px;
 }

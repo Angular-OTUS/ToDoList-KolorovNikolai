@@ -1,19 +1,19 @@
 import { Component, computed, effect, input, output, signal } from '@angular/core';
 import { Todo } from '../../models/todo';
-import { Button } from '../button/button';
+import { ButtonComponent } from '../button/button';
 import { TooltipDirective } from '../../directives/tooltip';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-todo-list-item',
-  imports: [Button, TooltipDirective, FormsModule, CommonModule],
+  imports: [ButtonComponent, TooltipDirective, FormsModule, CommonModule],
   templateUrl: './todo-list-item.html',
   styleUrl: './todo-list-item.css',
 })
 export class TodoListItem {
   public todo = input<Todo>();
-  public editingId  = input<number | null>();
+  public editingId  = input<number | null>();  
 
   public delete = output<number>();
   public save = output<Todo>();
@@ -24,7 +24,7 @@ export class TodoListItem {
   
   public isEditingTodo = computed(() => this.editingId() === this.todo()?.id);
   public isDeleteLocked = computed(() => this.editingId() !== null && this.editingId() !== this.todo()?.id);
- 
+
   constructor() {
     // сбрасываем локальный editingTitle при закрытии редактирования
     effect(() => {
@@ -57,4 +57,15 @@ export class TodoListItem {
   public onCancel(): void {
     this.cancel.emit();
   }
+
+  public toggleStatus(event: MouseEvent) {
+    event.stopPropagation();
+    if (this.todo()) {
+      const updated: Todo = {
+        ...this.todo()!,
+        status: this.todo()!.status === 'Completed' ? 'InProgress' : 'Completed',
+      };
+      this.save.emit(updated);
+    }
+  }  
 }

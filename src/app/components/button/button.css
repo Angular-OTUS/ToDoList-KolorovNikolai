@@ -7,18 +7,19 @@
   justify-content: center;
   align-items: center;
   border: none;
-  height: 50px;
+  height: 40px;
+  gap: 6px; 
 }
 
 .button__add {
   background: var(--add-base);
-  width: 100px;
-  font-size: 18px;  
+  width: 80px;
+  font-size: 16px;
 }
 
 .button__delete {
   background: var(--delete-base);
-  width: 80px;
+  width: 80px;  
 }
 
 .button__save {

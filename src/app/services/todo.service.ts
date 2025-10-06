@@ -1,7 +1,7 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { Todo } from '../models/todo';
+import { Todo, TodoApi } from '../models/todo';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { catchError, map, Observable, of, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -13,12 +13,22 @@ export class TodoService {
   public todos = signal<Todo[]>([]);  
 
   // Загрузить список задач
+  // public loadTodos(): void {
+  //   this.http.get<Todo[]>(this.apiUrl).subscribe({
+  //     next: (data) => this.todos.set(data),
+  //     error: (err) => console.error('Ошибка загрузки todos', err),
+  //   });
+  // }
+
   public loadTodos(): void {
-    this.http.get<Todo[]>(this.apiUrl).subscribe({
-      next: (data) => this.todos.set(data),
-      error: (err) => console.error('Ошибка загрузки todos', err),
-    });
-  }
+    this.http.get<TodoApi[]>(this.apiUrl).pipe(
+      map(todos => todos.map(t => ({
+        ...t,
+        status: t.completed ? 'Completed' as const : 'InProgress' as const,
+      }))),
+      tap(mapped => this.todos.set(mapped)),
+    ).subscribe();
+  }  
 
   // Добавление задачи
   public add(todo: Omit<Todo, 'id'>): Observable<Todo> {
@@ -29,10 +39,15 @@ export class TodoService {
 
   // Обновление задачи
   public update(todo: Todo): Observable<Todo> {
-    return this.http.put<Todo>(`${this.apiUrl}/${todo.id}`, todo).pipe(
-      tap(updated => {
-        this.todos.update(list => list.map(t => t.id === updated.id ? updated : t));
-      }),
+    const apiTodo = {
+      ...todo,
+      completed: todo.status === 'Completed',
+    };    
+    return this.http.put<Todo>(`${this.apiUrl}/${todo.id}`, apiTodo).pipe(
+      tap(() => this.loadTodos()),
+      // tap(updated => {
+      //   this.todos.update(list => list.map(t => t.id === updated.id ? updated : t));
+      // }),
     );
   }
 
