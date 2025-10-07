@@ -3,5 +3,5 @@
   [ngClass]="classes()"
   [disabled]="disabled()"
   (click)="onClick($event)">
-  {{ title() }}
+  <ng-content></ng-content>
 </button>

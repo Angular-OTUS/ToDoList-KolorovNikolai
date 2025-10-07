@@ -8,8 +8,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './button.html',
   styleUrl: './button.css',
 })
-export class Button {
-  public title = input<string>('');
+export class ButtonComponent {  
   public type = input<ButtonType>('add');
   public disabled = input<boolean>(false);
 

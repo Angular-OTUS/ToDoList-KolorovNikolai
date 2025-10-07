@@ -1,42 +1,41 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, computed, inject, signal } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Todo } from '../../models/todo';
 import { TodoListItem } from '../todo-list-item/todo-list-item';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { Button } from '../button/button';
 import { TodoService } from '../../services/todo.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { TooltipDirective } from '../../directives/tooltip';
 import { ToastService } from '../../shared/toast.service';
+import { LoadingSpinnerComponent } from '../../shared/loading-spinner.component/loading-spinner.component';
+import { MatSelectModule } from '@angular/material/select';
+import { TodoCreateItem } from '../todo-create-item/todo-create-item';
 
 @Component({
   selector: 'app-todo-list',
   imports: [CommonModule, FormsModule, TodoListItem, MatInputModule, MatProgressSpinnerModule,
-            Button, ReactiveFormsModule, MatFormFieldModule, TooltipDirective],
+            ReactiveFormsModule, MatFormFieldModule, LoadingSpinnerComponent,
+            MatSelectModule, TodoCreateItem],
   templateUrl: './todo-list.html',
   styleUrl: './todo-list.css',
 })
-export class TodoList {
-  private readonly fb = inject(FormBuilder);
+export class TodoList {  
   private readonly todoService = inject(TodoService);
   private readonly toastService = inject(ToastService);
   
   public todos = this.todoService.todos;
   public isLoading = signal(true);
+  public statusFilter = signal<string>('');
 
   public selectedTodo = signal<Todo | null>(null);
   public editingId  = signal<number | null>(null);
 
-  public todoForm: FormGroup = this.fb.group({
-      title: ['', Validators.required],
-      description: [''],
-  });
-
-  public get isTaskEmpty(): boolean {    
-    return !(this.todoForm.get('title')?.value?.trim());
-  }  
+  public filteredTodos = computed(() =>
+    this.todos().filter(todo =>
+      this.statusFilter() === '' || todo.status === this.statusFilter(),
+    ),
+  );
 
   ngOnInit() {
     this.todoService.loadTodos();
@@ -55,25 +54,16 @@ export class TodoList {
     this.editingId.set(null);
   }
   
-  public onAdd(): void {
-    if (!this.todoForm.valid) return;
-
-    const newTodo: Omit<Todo, 'id'> = {
-      title: this.todoForm.get('title')?.value.trim(),
-      description: this.todoForm.get('description')?.value.trim(),
-      completed: false,
-    };
-
+  public onAdd(newTodo: Omit<Todo, 'id'>): void {
     this.todoService.add(newTodo).subscribe({
       next: (added) => {
-        this.todoForm.reset({ title: '', description: '' });
-        this.selectedTodo.set(added); // выделяем только что добавленную задачу
+        this.selectedTodo.set(added);
         this.toastService.showToast('Задача добавлена', 'add');
       },
       error: (err) => console.error('Ошибка добавления', err),
     });
-  }
-  
+  }  
+
   public onUpdate(updated: Todo): void {
     this.todoService.update(updated).subscribe({
       next: (updated) => {

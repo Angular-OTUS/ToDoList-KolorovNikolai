@@ -1,0 +1,23 @@
+<form [formGroup]="todoForm" (ngSubmit)="onSubmit()" class="add">
+  <div class="add__field">
+    <input type="text" placeholder="Title" formControlName="title" #titleInput />
+
+    @if (!todoForm.get('title')?.value && todoForm.get('title')?.touched) {
+      <span class="add__error">Title is required</span>
+    }
+  </div>
+
+  <div class="add__field">
+    <textarea placeholder="Description" formControlName="description"></textarea>
+  </div>
+
+  <div class="add__actions">
+    <app-button              
+      [type]="'add'"
+      [disabled]="isTaskEmpty"
+      appTooltip="Добавить задачу">
+      <i class="bi bi-plus"></i>
+      Add
+    </app-button>
+  </div>
+</form>
