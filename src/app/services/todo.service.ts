@@ -1,7 +1,7 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { Todo, TodoApi } from '../models/todo';
 import { HttpClient } from '@angular/common/http';
-import { catchError, map, Observable, of, tap } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -11,14 +11,6 @@ export class TodoService {
   private apiUrl = 'https://68d14427e6c0cbeb39a42790.mockapi.io/api/todos';  
 
   public todos = signal<Todo[]>([]);  
-
-  // Загрузить список задач
-  // public loadTodos(): void {
-  //   this.http.get<Todo[]>(this.apiUrl).subscribe({
-  //     next: (data) => this.todos.set(data),
-  //     error: (err) => console.error('Ошибка загрузки todos', err),
-  //   });
-  // }
 
   public loadTodos(): void {
     this.http.get<TodoApi[]>(this.apiUrl).pipe(
@@ -45,9 +37,6 @@ export class TodoService {
     };    
     return this.http.put<Todo>(`${this.apiUrl}/${todo.id}`, apiTodo).pipe(
       tap(() => this.loadTodos()),
-      // tap(updated => {
-      //   this.todos.update(list => list.map(t => t.id === updated.id ? updated : t));
-      // }),
     );
   }
 

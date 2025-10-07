@@ -3,7 +3,7 @@
     <input type="text" placeholder="Title" formControlName="title" #titleInput />
 
     @if (!todoForm.get('title')?.value && todoForm.get('title')?.touched) {
-      <div class="add__error">Title is required</div>
+      <span class="add__error">Title is required</span>
     }
   </div>
 
