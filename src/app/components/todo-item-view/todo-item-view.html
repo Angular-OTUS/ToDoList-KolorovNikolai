@@ -1,0 +1,30 @@
+@if (todo(); as t) {
+  <div class="todo-view">
+    <div class="todo-view__header">   
+      <h2 class="todo-view__title">{{ t.title }}</h2>   
+      <div class="todo-view__status"
+        (click)="toggleStatus()"
+        appTooltip="Изменить статус">
+        <i class="bi"
+          [ngClass]="{
+            'bi-check-circle text-success': t.status === 'Completed',
+            'bi-circle text-secondary': t.status === 'InProgress'
+          }">
+        </i>
+        <span class="todo-view__status-text"
+          [ngClass]="{
+              'text-success': t.status === 'Completed',
+              'text-secondary': t.status === 'InProgress'
+            }">
+          {{ t.status === 'Completed' ? 'Completed' : 'In Progress' }}
+        </span>
+      </div>      
+    </div>
+
+    <p class="todo-view__description">
+      {{ t.description || 'Нет описания' }}
+    </p>
+  </div>
+} @else {
+  <div class="todo-view__placeholder">Choose task</div>
+}

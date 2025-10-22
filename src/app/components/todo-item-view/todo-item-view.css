@@ -1,0 +1,46 @@
+.todo-view {
+  padding: 16px;
+  background-color: #fff;  
+}
+
+.todo-view__title {
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.todo-view__description {
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.todo-view__placeholder {
+  display: flex;
+  color: #999;
+  padding: 70px 16px 16px 16px;
+  text-align: center;
+  justify-content: center;
+}
+
+.todo-view__status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+}
+
+.todo-view__status-text {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.text-success {
+  color: #2e7d32;
+}
+
+.text-secondary {
+  color: #777;
+}

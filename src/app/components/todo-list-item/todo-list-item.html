@@ -1,12 +1,9 @@
-<li class="item"
-	(dblclick)="onEdit()"
-	[class.selected]="isEditingTodo()">
-  
-  @if (!isEditingTodo()) {
-    <div class="item__left" (click)="toggleStatus($event)">
+<div class="item__content" [class.selected]="selected()">
+  @if (!isEditingTodo()) {    
+    <div class="item__left">
       <i class="bi" [ngClass]="{
-        'bi-check-circle-fill': todo()?.status === 'Completed',
-        'bi-circle': todo()?.status === 'InProgress'
+        'bi-check-lg': todo()?.status === 'Completed',
+        '': todo()?.status === 'InProgress'
       }"></i>
     </div>
         
@@ -19,8 +16,8 @@
       appTooltip="Удалить задачу">
       <i class="bi bi-trash"></i>
       Delete
-    </app-button>    
-  } @else {    
+    </app-button>     
+  } @else {
     <input
       class="item__edit-input"
       [value]="editingTitle()"
@@ -41,6 +38,6 @@
       appTooltip="Отменить изменения">
       <i class="bi bi-x-lg"></i>
       Cancel
-    </app-button>
-  } 
-</li>
+    </app-button>    
+  }
+</div>

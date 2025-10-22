@@ -13,7 +13,7 @@ import { Todo } from '../../models/todo';
 })
 export class TodoCreateItem {
   private readonly fb = inject(FormBuilder);
-  
+    
   public add = output<Omit<Todo, 'id'>>();
 
   public todoForm: FormGroup = this.fb.group({

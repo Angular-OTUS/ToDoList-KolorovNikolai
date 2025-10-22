@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, OnInit, signal } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Todo } from '../../models/todo';
 import { TodoListItem } from '../todo-list-item/todo-list-item';
@@ -11,78 +11,90 @@ import { ToastService } from '../../shared/toast.service';
 import { LoadingSpinnerComponent } from '../../shared/loading-spinner.component/loading-spinner.component';
 import { MatSelectModule } from '@angular/material/select';
 import { TodoCreateItem } from '../todo-create-item/todo-create-item';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-todo-list',
   imports: [CommonModule, FormsModule, TodoListItem, MatInputModule, MatProgressSpinnerModule,
             ReactiveFormsModule, MatFormFieldModule, LoadingSpinnerComponent,
-            MatSelectModule, TodoCreateItem],
+            MatSelectModule, TodoCreateItem, RouterOutlet],
   templateUrl: './todo-list.html',
   styleUrl: './todo-list.css',
 })
-export class TodoList {  
+export class TodoList implements OnInit {
   private readonly todoService = inject(TodoService);
-  private readonly toastService = inject(ToastService);
-  
-  public todos = this.todoService.todos;
-  public isLoading = signal(true);
-  public statusFilter = signal<string>('');
+  private readonly toastService = inject(ToastService);  
 
-  public selectedTodo = signal<Todo | null>(null);
-  public editingId  = signal<number | null>(null);
+  protected readonly isLoading = signal(true);
+  protected readonly statusFilter = signal<string>('');
+  protected readonly editingId  = signal<string | null>(null);
 
-  public filteredTodos = computed(() =>
-    this.todos().filter(todo =>
-      this.statusFilter() === '' || todo.status === this.statusFilter(),
-    ),
-  );
+  protected readonly filteredTodos = computed(() => {
+    const filter = this.statusFilter();
+    const todos = this.todoService.todos();
+    return filter ? todos.filter((t) => t.status === filter) : todos;
+  });
 
-  ngOnInit() {
+  protected readonly selectedTodoId = computed(() => this.todoService.selectedTodo()?.id ?? null);
+
+  constructor() {
+    effect(() => {      
+      const selected = this.todoService.selectedTodo();
+
+      // Если выбранная задача ушла из фильтра
+      if (selected && !this.filteredTodos().some(t => t.id === selected.id)) {
+        this.todoService.select(null); 
+      }
+    });
+  }
+
+  ngOnInit() {    
     this.todoService.loadTodos();
     setTimeout(() => this.isLoading.set(false), 500);
   }
-
-  public selectTodo(todo: Todo): void {
-    if (this.editingId() === null) this.selectedTodo.set(todo);
+  
+  public selectTodo(todo: Todo | null) {
+    // Выбираем только если задача есть в фильтре
+    if (!todo || this.filteredTodos().some(t => t.id === todo.id)) {
+      this.todoService.select(todo);
+    }
   }
 
-  public startEdit(id: number): void {    
+  public startEdit(id: string): void {    
     this.editingId.set(id);
   }
 
   public cancelEdit(): void {
     this.editingId.set(null);
-  }
-  
+  }  
+ 
   public onAdd(newTodo: Omit<Todo, 'id'>): void {
     this.todoService.add(newTodo).subscribe({
       next: (added) => {
-        this.selectedTodo.set(added);
         this.toastService.showToast('Задача добавлена', 'add');
+        this.todoService.select(added);        
       },
-      error: (err) => console.error('Ошибка добавления', err),
+      error: () => this.toastService.showToast('Ошибка добавления', 'error'),
     });
-  }  
+  }
 
-  public onUpdate(updated: Todo): void {
-    this.todoService.update(updated).subscribe({
-      next: (updated) => {
-        this.selectedTodo.set(updated);
+  public onUpdate(todo: Todo): void {
+    this.todoService.update(todo).subscribe({
+      next: () => {
         this.cancelEdit();
         this.toastService.showToast('Задача обновлена', 'save');
       },
-      error: (err) => console.error('Ошибка обновления', err),
+      error: () => this.toastService.showToast('Ошибка обновления', 'error'),
     });
-  }  
+  }
 
-  public onRemove(id: number): void {
+  public onRemove(id: string): void {
     this.todoService.remove(id).subscribe({
       next: () => {
         if (this.editingId() === id) this.cancelEdit();
-        if (this.selectedTodo()?.id === id) this.selectedTodo.set(null);        
         this.toastService.showToast('Задача удалена', 'delete');
       },
-      error: (err) => console.error('Ошибка удаления', err),
+      error: () => this.toastService.showToast('Ошибка удаления', 'error'),
     });
-  }  
+  }
 }
