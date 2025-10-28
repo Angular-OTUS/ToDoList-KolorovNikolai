@@ -6,17 +6,11 @@
         (click)="toggleStatus()"
         appTooltip="Изменить статус">
         <i class="bi"
-          [ngClass]="{
-            'bi-check-circle text-success': t.status === 'Completed',
-            'bi-circle text-secondary': t.status === 'InProgress'
-          }">
+          [ngClass]="statusIconClass()">
         </i>
         <span class="todo-view__status-text"
-          [ngClass]="{
-              'text-success': t.status === 'Completed',
-              'text-secondary': t.status === 'InProgress'
-            }">
-          {{ t.status === 'Completed' ? 'Completed' : 'In Progress' }}
+          [ngClass]="statusTextClass()">
+          {{ statusText() }}
         </span>
       </div>      
     </div>

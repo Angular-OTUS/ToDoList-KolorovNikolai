@@ -3,7 +3,7 @@ import { Todo } from '../models/todo';
 import { TodoApiService } from './todo-api.service';
 import { filter, map, Observable, tap } from 'rxjs';
 import { NavigationEnd, Router } from '@angular/router';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 
 @Injectable({
   providedIn: 'root',
@@ -42,10 +42,12 @@ export class TodoService {
   }  
 
   public loadTodos(): void {
-    this.api.getAll().subscribe({
-      next: (todos) => this.#todos.set(todos),
-      error: (err) => console.error('Ошибка загрузки задач', err),
-    });
+    this.api.getAll()
+      .pipe(takeUntilDestroyed())
+      .subscribe({
+        next: (todos) => this.#todos.set(todos),
+        error: (err) => console.error('Ошибка загрузки задач', err),
+      });
   }
 
   public select(todo: Todo | null) {

@@ -12,6 +12,7 @@ import { LoadingSpinnerComponent } from '../../shared/loading-spinner.component/
 import { MatSelectModule } from '@angular/material/select';
 import { TodoCreateItem } from '../todo-create-item/todo-create-item';
 import { RouterOutlet } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-todo-list',
@@ -69,32 +70,41 @@ export class TodoList implements OnInit {
   }  
  
   public onAdd(newTodo: Omit<Todo, 'id'>): void {
-    this.todoService.add(newTodo).subscribe({
-      next: (added) => {
-        this.toastService.showToast('Задача добавлена', 'add');
-        this.todoService.select(added);        
-      },
-      error: () => this.toastService.showToast('Ошибка добавления', 'error'),
-    });
+    this.todoService
+      .add(newTodo)
+      .pipe(takeUntilDestroyed())
+      .subscribe({
+        next: (added) => {
+          this.toastService.showToast('Задача добавлена', 'add');
+          this.todoService.select(added);        
+        },
+        error: () => this.toastService.showToast('Ошибка добавления', 'error'),
+      });
   }
 
   public onUpdate(todo: Todo): void {
-    this.todoService.update(todo).subscribe({
-      next: () => {
-        this.cancelEdit();
-        this.toastService.showToast('Задача обновлена', 'save');
-      },
-      error: () => this.toastService.showToast('Ошибка обновления', 'error'),
-    });
+    this.todoService
+      .update(todo)
+      .pipe(takeUntilDestroyed())
+      .subscribe({
+        next: () => {
+          this.cancelEdit();
+          this.toastService.showToast('Задача обновлена', 'save');
+        },
+        error: () => this.toastService.showToast('Ошибка обновления', 'error'),
+      });
   }
 
   public onRemove(id: string): void {
-    this.todoService.remove(id).subscribe({
-      next: () => {
-        if (this.editingId() === id) this.cancelEdit();
-        this.toastService.showToast('Задача удалена', 'delete');
-      },
-      error: () => this.toastService.showToast('Ошибка удаления', 'error'),
-    });
+    this.todoService
+      .remove(id)
+      .pipe(takeUntilDestroyed())
+      .subscribe({
+        next: () => {
+          if (this.editingId() === id) this.cancelEdit();
+          this.toastService.showToast('Задача удалена', 'delete');
+        },
+        error: () => this.toastService.showToast('Ошибка удаления', 'error'),
+      });
   }
 }
