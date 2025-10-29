@@ -1,9 +1,8 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, DestroyRef, inject } from '@angular/core';
 import { Todo } from '../../models/todo';
 import { CommonModule } from '@angular/common';
 import { TooltipDirective } from '../../directives/tooltip';
 import { TodoService } from '../../services/todo.service';
-import { take } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
@@ -14,6 +13,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 })
 export class TodoItemView {  
   private readonly todoService = inject(TodoService);
+  private readonly destroyRef = inject(DestroyRef);
 
   // выбранная задача
   public readonly todo = computed(() => this.todoService.selectedTodo());
@@ -50,7 +50,7 @@ export class TodoItemView {
       status: t.status === 'Completed' ? 'InProgress' : 'Completed',
     };
     this.todoService.update(updated)
-      .pipe(takeUntilDestroyed())
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe();
   }
 }

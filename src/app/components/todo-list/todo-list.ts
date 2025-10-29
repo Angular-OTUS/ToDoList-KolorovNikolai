@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, DestroyRef, effect, inject, OnInit, signal } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Todo } from '../../models/todo';
 import { TodoListItem } from '../todo-list-item/todo-list-item';
@@ -24,7 +24,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 })
 export class TodoList implements OnInit {
   private readonly todoService = inject(TodoService);
-  private readonly toastService = inject(ToastService);  
+  private readonly toastService = inject(ToastService);
+  private readonly destroyRef = inject(DestroyRef);
 
   protected readonly isLoading = signal(true);
   protected readonly statusFilter = signal<string>('');
@@ -72,7 +73,7 @@ export class TodoList implements OnInit {
   public onAdd(newTodo: Omit<Todo, 'id'>): void {
     this.todoService
       .add(newTodo)
-      .pipe(takeUntilDestroyed())
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (added) => {
           this.toastService.showToast('Задача добавлена', 'add');
@@ -85,7 +86,7 @@ export class TodoList implements OnInit {
   public onUpdate(todo: Todo): void {
     this.todoService
       .update(todo)
-      .pipe(takeUntilDestroyed())
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
           this.cancelEdit();
@@ -98,7 +99,7 @@ export class TodoList implements OnInit {
   public onRemove(id: string): void {
     this.todoService
       .remove(id)
-      .pipe(takeUntilDestroyed())
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
           if (this.editingId() === id) this.cancelEdit();

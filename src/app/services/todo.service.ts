@@ -1,4 +1,4 @@
-import { effect, inject, Injectable, signal } from '@angular/core';
+import { DestroyRef, effect, inject, Injectable, signal } from '@angular/core';
 import { Todo } from '../models/todo';
 import { TodoApiService } from './todo-api.service';
 import { filter, map, Observable, tap } from 'rxjs';
@@ -10,7 +10,8 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 })
 export class TodoService {
   private readonly api = inject(TodoApiService);
-  private readonly router = inject(Router);  
+  private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly #todos = signal<Todo[]>([]);
   readonly #selectedTodo = signal<Todo | null>(null);
@@ -43,7 +44,7 @@ export class TodoService {
 
   public loadTodos(): void {
     this.api.getAll()
-      .pipe(takeUntilDestroyed())
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (todos) => this.#todos.set(todos),
         error: (err) => console.error('Ошибка загрузки задач', err),
