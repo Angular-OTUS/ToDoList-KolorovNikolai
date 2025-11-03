@@ -4,7 +4,7 @@
     <app-loading-spinner [size]="30" text="Loading..." />
   } @else {
     <div class="todo">
-      <!-- Левая колонка: список + форма -->
+      <!-- Левая колонка -->
       <div class="todo__left">
 
         <!-- Фильтр по статусу -->
@@ -24,35 +24,35 @@
         <ul class="todo__list">
           @if (filteredTodos().length > 0) {
             @for (t of filteredTodos(); track t.id) {
-              <app-todo-list-item
-                [todo]="t"
-                [editingId]="editingId() "
-                (edit)="startEdit(t.id)"
-                (cancel)="cancelEdit()"
-                (click)="selectTodo(t)"
-                (delete)="onRemove($event)"
-                (save)="onUpdate($event)"
-                [class.selected]="selectedTodo()?.id === t.id" />
+              <li class="item"
+                  (dblclick)="startEdit(t.id)"
+                  (click)="selectTodo(t)">
+                <app-todo-list-item
+                  [todo]="t"
+                  [editingId]="editingId()"
+                  [selected]="selectedTodoId() === t.id"
+                  (edit)="startEdit(t.id)"
+                  (cancel)="cancelEdit()"
+                  (delete)="onRemove($event)"
+                  (save)="onUpdate($event)"
+                  />
+              </li>
             }
           } @else {
             <li class="todo__empty">No tasks</li>
           }
         </ul>
 
+        <!-- Форма добавления -->
         <app-todo-create-item (add)="onAdd($event)"></app-todo-create-item>
 
       </div>
 
       <!-- Правая колонка -->
-      @if (selectedTodo()) {
-        <div class="todo__description">
-          <p class="todo__description-text">
-            {{ selectedTodo()!.description }}
-          </p>
-        </div>
-      } @else {
-        <div class="todo__placeholder">Choose task</div>
-      }
+      <div class="todo__right">
+        <router-outlet></router-outlet>
+      </div>
+
     </div>
   }
 </div>

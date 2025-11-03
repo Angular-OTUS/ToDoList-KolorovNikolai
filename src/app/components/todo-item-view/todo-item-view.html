@@ -1,0 +1,24 @@
+@if (todo(); as t) {
+  <div class="todo-view">
+    <div class="todo-view__header">   
+      <h2 class="todo-view__title">{{ t.title }}</h2>   
+      <div class="todo-view__status"
+        (click)="toggleStatus()"
+        appTooltip="Изменить статус">
+        <i class="bi"
+          [ngClass]="statusIconClass()">
+        </i>
+        <span class="todo-view__status-text"
+          [ngClass]="statusTextClass()">
+          {{ statusText() }}
+        </span>
+      </div>      
+    </div>
+
+    <p class="todo-view__description">
+      {{ t.description || 'Нет описания' }}
+    </p>
+  </div>
+} @else {
+  <div class="todo-view__placeholder">Choose task</div>
+}

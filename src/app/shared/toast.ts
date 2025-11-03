@@ -1,4 +1,4 @@
-export type ToastType = 'add' | 'delete' | 'save';
+export type ToastType = 'add' | 'delete' | 'save' | 'error';
 
 export interface Toast {
   id: number;

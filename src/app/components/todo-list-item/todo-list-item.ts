@@ -13,9 +13,10 @@ import { CommonModule } from '@angular/common';
 })
 export class TodoListItem {
   public todo = input<Todo>();
-  public editingId  = input<number | null>();  
+  public editingId  = input<string | null>();
+  public selected = input<boolean>(false);
 
-  public delete = output<number>();
+  public delete = output<string>();
   public save = output<Todo>();
   public edit = output<void>();
   public cancel = output<void>(); 
@@ -57,15 +58,4 @@ export class TodoListItem {
   public onCancel(): void {
     this.cancel.emit();
   }
-
-  public toggleStatus(event: MouseEvent) {
-    event.stopPropagation();
-    if (this.todo()) {
-      const updated: Todo = {
-        ...this.todo()!,
-        status: this.todo()!.status === 'Completed' ? 'InProgress' : 'Completed',
-      };
-      this.save.emit(updated);
-    }
-  }  
 }

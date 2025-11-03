@@ -1,14 +1,14 @@
 export type TodoStatus = 'InProgress' | 'Completed';
 
 export interface Todo {
-  id: number,
+  id: string,
   title: string,
   description?: string,
   status: TodoStatus
 }
 
 export interface TodoApi {
-  id: number;
+  id: string;
   title: string;
   description?: string;
   completed: boolean;
